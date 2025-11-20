@@ -1,7 +1,7 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
+import { useRef, useEffect } from "react";
 import { Box, Typography, Button, Container } from "@mui/material";
 
 export default function Hero() {
@@ -13,6 +13,25 @@ export default function Hero() {
 
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+  // Mouse parallax effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const springConfig = { damping: 25, stiffness: 150 };
+  const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [10, -10]), springConfig);
+  const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-10, 10]), springConfig);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      mouseX.set((e.clientX / innerWidth) - 0.5);
+      mouseY.set((e.clientY / innerHeight) - 0.5);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [mouseX, mouseY]);
 
   return (
     <Box
@@ -28,65 +47,32 @@ export default function Hero() {
         justifyContent: "center",
         overflow: "hidden",
         pt: 10,
+        perspective: "1000px",
       }}
     >
-      {/* Background Elements */}
-      <Box sx={{ position: "absolute", inset: 0, zIndex: 0 }}>
-        <Box
-          sx={{
-            position: "absolute",
-            top: "25%",
-            left: "25%",
-            width: 384,
-            height: 384,
-            bgcolor: "rgba(59, 130, 246, 0.2)",
-            borderRadius: "50%",
-            filter: "blur(120px)",
-            animation: "pulse 4s infinite",
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: "25%",
-            right: "25%",
-            width: 384,
-            height: 384,
-            bgcolor: "rgba(147, 51, 234, 0.1)",
-            borderRadius: "50%",
-            filter: "blur(120px)",
-          }}
-        />
-        <Box
-          sx={{
-            position: "absolute",
-            inset: 0,
-            backgroundImage: "url('/grid.svg')",
-            opacity: 0.1,
-          }}
-        />
-      </Box>
-
       <Container maxWidth="lg" sx={{ position: "relative", zIndex: 10, textAlign: "center" }}>
-        <motion.div style={{ y, opacity }}>
+        <motion.div style={{ y, opacity, rotateX, rotateY, transformStyle: "preserve-3d" }}>
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
+            initial={{ opacity: 0, scale: 0.9, z: -100 }}
+            animate={{ opacity: 1, scale: 1, z: 0 }}
             transition={{ duration: 1, ease: "easeOut" }}
+            style={{ transformStyle: "preserve-3d" }}
           >
             <Box
               sx={{
-                mb: 3,
+                mb: 4,
                 display: "inline-block",
-                px: 2,
-                py: 0.75,
+                px: 3,
+                py: 1,
                 borderRadius: 50,
                 border: "1px solid rgba(255, 255, 255, 0.1)",
                 bgcolor: "rgba(255, 255, 255, 0.05)",
-                backdropFilter: "blur(4px)",
+                backdropFilter: "blur(10px)",
                 typography: "caption",
                 fontFamily: "monospace",
                 color: "primary.light",
+                boxShadow: "0 0 20px rgba(59, 130, 246, 0.2)",
+                transform: "translateZ(50px)",
               }}
             >
               PIONEERING THE NEXT FRONTIER
@@ -97,25 +83,40 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
+            style={{ transformStyle: "preserve-3d" }}
           >
             <Typography
               variant="h1"
               sx={{
-                fontSize: { xs: "3.5rem", md: "6rem" },
-                fontWeight: 700,
-                letterSpacing: "-0.02em",
+                fontSize: { xs: "3.5rem", md: "7rem" },
+                fontWeight: 800,
+                letterSpacing: "-0.03em",
                 mb: 3,
-                background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255,255,255,0.4))",
+                background: "linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.7) 100%)",
                 WebkitBackgroundClip: "text",
                 WebkitTextFillColor: "transparent",
+                filter: "drop-shadow(0 10px 20px rgba(0,0,0,0.5))",
+                transform: "translateZ(80px)",
               }}
             >
               DECODING <br />
               <Box
                 component="span"
                 sx={{
-                  textShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
-                  WebkitTextFillColor: "white", // Reset fill for glow effect visibility if needed, or keep transparent
+                  background: "linear-gradient(to right, #3b82f6, #8b5cf6)",
+                  WebkitBackgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  position: "relative",
+                  display: "inline-block",
+                  "&::after": {
+                    content: '""',
+                    position: "absolute",
+                    inset: 0,
+                    background: "inherit",
+                    filter: "blur(20px)",
+                    opacity: 0.5,
+                    zIndex: -1,
+                  }
                 }}
               >
                 INTELLIGENCE
@@ -127,6 +128,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
+            style={{ transformStyle: "preserve-3d", transform: "translateZ(40px)" }}
           >
             <Typography
               variant="h6"
@@ -135,7 +137,8 @@ export default function Hero() {
                 maxWidth: "sm",
                 mx: "auto",
                 lineHeight: 1.6,
-                mb: 5,
+                mb: 6,
+                textShadow: "0 2px 10px rgba(0,0,0,0.5)",
               }}
             >
               We are building the foundational systems for general artificial intelligence.
@@ -147,17 +150,24 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
+            style={{ transformStyle: "preserve-3d", transform: "translateZ(60px)" }}
           >
-            <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2, justifyContent: "center" }}>
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 3, justifyContent: "center" }}>
               <Button
                 variant="contained"
                 size="large"
                 sx={{
                   bgcolor: "white",
                   color: "black",
-                  "&:hover": { bgcolor: "grey.200" },
-                  px: 4,
-                  py: 1.5,
+                  "&:hover": {
+                    bgcolor: "white",
+                    transform: "scale(1.05)",
+                    boxShadow: "0 0 30px rgba(255,255,255,0.3)",
+                  },
+                  px: 5,
+                  py: 2,
+                  fontSize: "1.1rem",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
               >
                 Explore Research
@@ -169,10 +179,17 @@ export default function Hero() {
                   borderColor: "rgba(255,255,255,0.2)",
                   color: "white",
                   bgcolor: "rgba(255,255,255,0.05)",
-                  backdropFilter: "blur(4px)",
-                  "&:hover": { bgcolor: "rgba(255,255,255,0.1)", borderColor: "white" },
-                  px: 4,
-                  py: 1.5,
+                  backdropFilter: "blur(10px)",
+                  "&:hover": {
+                    bgcolor: "rgba(255,255,255,0.1)",
+                    borderColor: "white",
+                    transform: "scale(1.05)",
+                    boxShadow: "0 0 30px rgba(59,130,246,0.2)",
+                  },
+                  px: 5,
+                  py: 2,
+                  fontSize: "1.1rem",
+                  transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
                 }}
               >
                 View Platform
@@ -201,11 +218,12 @@ export default function Hero() {
         <Typography variant="caption" sx={{ letterSpacing: "0.2em", color: "text.secondary" }}>
           SCROLL
         </Typography>
-        <Box
-          sx={{
+        <motion.div
+          animate={{ height: [20, 50, 20], opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 2, repeat: Infinity }}
+          style={{
             width: 1,
-            height: 48,
-            background: "linear-gradient(to bottom, gray, transparent)",
+            background: "linear-gradient(to bottom, #3b82f6, transparent)",
           }}
         />
       </motion.div>

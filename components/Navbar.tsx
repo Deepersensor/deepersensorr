@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, useScroll } from "framer-motion";
 import {
   AppBar,
   Toolbar,
@@ -24,6 +24,14 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { scrollY } = useScroll();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    return scrollY.onChange((latest) => {
+      setIsScrolled(latest > 50);
+    });
+  }, [scrollY]);
 
   const navItems = ["Research", "Platform", "About", "Careers"];
 
@@ -32,9 +40,11 @@ export default function Navbar() {
       position="fixed"
       elevation={0}
       sx={{
-        background: "rgba(3, 3, 5, 0.8)",
-        backdropFilter: "blur(10px)",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+        background: isScrolled ? "rgba(3, 3, 5, 0.7)" : "transparent",
+        backdropFilter: isScrolled ? "blur(20px)" : "none",
+        borderBottom: isScrolled ? "1px solid rgba(255, 255, 255, 0.05)" : "none",
+        transition: "all 0.3s ease-in-out",
+        py: isScrolled ? 1 : 2,
       }}
       component={motion.div}
       initial={{ y: -100 }}
@@ -42,20 +52,20 @@ export default function Navbar() {
       transition={{ duration: 0.8, ease: "easeOut" }}
     >
       <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 6 } }}>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
           <Box
             sx={{
               width: 32,
               height: 32,
               bgcolor: "primary.main",
               borderRadius: "50%",
-              filter: "blur(2px)",
-              opacity: 0.8,
-              animation: "pulse 2s infinite",
+              filter: "blur(0px)",
+              boxShadow: "0 0 15px rgba(59, 130, 246, 0.8)",
+              animation: "pulse 3s infinite",
               "@keyframes pulse": {
-                "0%": { opacity: 0.8 },
-                "50%": { opacity: 0.4 },
-                "100%": { opacity: 0.8 },
+                "0%": { boxShadow: "0 0 15px rgba(59, 130, 246, 0.8)" },
+                "50%": { boxShadow: "0 0 25px rgba(59, 130, 246, 0.4)" },
+                "100%": { boxShadow: "0 0 15px rgba(59, 130, 246, 0.8)" },
               },
             }}
           />
@@ -66,6 +76,7 @@ export default function Navbar() {
               fontWeight: "bold",
               letterSpacing: "-0.05em",
               fontFamily: "monospace",
+              textShadow: "0 0 20px rgba(255,255,255,0.3)",
             }}
           >
             DEEPERSENSOR
@@ -73,14 +84,19 @@ export default function Navbar() {
         </Box>
 
         {!isMobile ? (
-          <Box sx={{ display: "flex", gap: 4 }}>
+          <Box sx={{ display: "flex", gap: 1 }}>
             {navItems.map((item) => (
               <Button
                 key={item}
                 href={`#${item.toLowerCase()}`}
                 sx={{
                   color: "text.secondary",
-                  "&:hover": { color: "text.primary" },
+                  borderRadius: 50,
+                  px: 3,
+                  "&:hover": {
+                    color: "text.primary",
+                    bgcolor: "rgba(255,255,255,0.05)",
+                  },
                 }}
               >
                 {item}
@@ -104,29 +120,44 @@ export default function Navbar() {
           onClose={() => setIsOpen(false)}
           PaperProps={{
             sx: {
-              bgcolor: "background.default",
+              bgcolor: "rgba(3, 3, 5, 0.95)",
+              backdropFilter: "blur(20px)",
               backgroundImage: "none",
+              height: "100vh",
             },
           }}
         >
-          <Box sx={{ p: 2, display: "flex", justifyContent: "flex-end" }}>
-            <IconButton onClick={() => setIsOpen(false)} color="inherit">
+          <Box sx={{ p: 3, display: "flex", justifyContent: "flex-end" }}>
+            <IconButton onClick={() => setIsOpen(false)} color="inherit" size="large">
               <CloseIcon />
             </IconButton>
           </Box>
-          <List>
-            {navItems.map((item) => (
-              <ListItem key={item} disablePadding>
-                <ListItemButton
-                  component="a"
-                  href={`#${item.toLowerCase()}`}
-                  onClick={() => setIsOpen(false)}
-                >
-                  <ListItemText primary={item} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", height: "80%" }}>
+            <List sx={{ width: "100%", maxWidth: 360 }}>
+              {navItems.map((item) => (
+                <ListItem key={item} disablePadding sx={{ mb: 2 }}>
+                  <ListItemButton
+                    component="a"
+                    href={`#${item.toLowerCase()}`}
+                    onClick={() => setIsOpen(false)}
+                    sx={{
+                      textAlign: "center",
+                      borderRadius: 4,
+                      "&:hover": { bgcolor: "rgba(255,255,255,0.05)" },
+                    }}
+                  >
+                    <ListItemText
+                      primary={item}
+                      primaryTypographyProps={{
+                        variant: "h4",
+                        fontWeight: "bold",
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))}
+            </List>
+          </Box>
         </Drawer>
       </Toolbar>
     </AppBar>
