@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform } from "framer-motion";
 import { useRef } from "react";
+import { Box, Typography, Button, Container } from "@mui/material";
 
 export default function Hero() {
   const ref = useRef(null);
@@ -14,75 +15,200 @@ export default function Hero() {
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
 
   return (
-    <section
+    <Box
       ref={ref}
-      className="relative h-screen w-full flex flex-col items-center justify-center overflow-hidden pt-20"
+      component="section"
+      sx={{
+        position: "relative",
+        height: "100vh",
+        width: "100%",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        overflow: "hidden",
+        pt: 10,
+      }}
     >
       {/* Background Elements */}
-      <div className="absolute inset-0 z-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-[120px] animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-[120px]" />
-        <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-      </div>
+      <Box sx={{ position: "absolute", inset: 0, zIndex: 0 }}>
+        <Box
+          sx={{
+            position: "absolute",
+            top: "25%",
+            left: "25%",
+            width: 384,
+            height: 384,
+            bgcolor: "rgba(59, 130, 246, 0.2)",
+            borderRadius: "50%",
+            filter: "blur(120px)",
+            animation: "pulse 4s infinite",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: "25%",
+            right: "25%",
+            width: 384,
+            height: 384,
+            bgcolor: "rgba(147, 51, 234, 0.1)",
+            borderRadius: "50%",
+            filter: "blur(120px)",
+          }}
+        />
+        <Box
+          sx={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: "url('/grid.svg')",
+            opacity: 0.1,
+          }}
+        />
+      </Box>
 
-      <motion.div
-        style={{ y, opacity }}
-        className="relative z-10 text-center px-4 max-w-5xl mx-auto"
-      >
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, ease: "easeOut" }}
-          className="mb-6 inline-block px-4 py-1.5 rounded-full border border-white/10 bg-white/5 backdrop-blur-sm text-xs font-mono text-blue-400"
-        >
-          PIONEERING THE NEXT FRONTIER
+      <Container maxWidth="lg" sx={{ position: "relative", zIndex: 10, textAlign: "center" }}>
+        <motion.div style={{ y, opacity }}>
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+          >
+            <Box
+              sx={{
+                mb: 3,
+                display: "inline-block",
+                px: 2,
+                py: 0.75,
+                borderRadius: 50,
+                border: "1px solid rgba(255, 255, 255, 0.1)",
+                bgcolor: "rgba(255, 255, 255, 0.05)",
+                backdropFilter: "blur(4px)",
+                typography: "caption",
+                fontFamily: "monospace",
+                color: "primary.light",
+              }}
+            >
+              PIONEERING THE NEXT FRONTIER
+            </Box>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: "3.5rem", md: "6rem" },
+                fontWeight: 700,
+                letterSpacing: "-0.02em",
+                mb: 3,
+                background: "linear-gradient(to bottom, #ffffff, #ffffff, rgba(255,255,255,0.4))",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              DECODING <br />
+              <Box
+                component="span"
+                sx={{
+                  textShadow: "0 0 20px rgba(59, 130, 246, 0.5)",
+                  WebkitTextFillColor: "white", // Reset fill for glow effect visibility if needed, or keep transparent
+                }}
+              >
+                INTELLIGENCE
+              </Box>
+            </Typography>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <Typography
+              variant="h6"
+              sx={{
+                color: "text.secondary",
+                maxWidth: "sm",
+                mx: "auto",
+                lineHeight: 1.6,
+                mb: 5,
+              }}
+            >
+              We are building the foundational systems for general artificial intelligence.
+              Bridging the gap between biological cognition and silicon efficiency.
+            </Typography>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+          >
+            <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: 2, justifyContent: "center" }}>
+              <Button
+                variant="contained"
+                size="large"
+                sx={{
+                  bgcolor: "white",
+                  color: "black",
+                  "&:hover": { bgcolor: "grey.200" },
+                  px: 4,
+                  py: 1.5,
+                }}
+              >
+                Explore Research
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                sx={{
+                  borderColor: "rgba(255,255,255,0.2)",
+                  color: "white",
+                  bgcolor: "rgba(255,255,255,0.05)",
+                  backdropFilter: "blur(4px)",
+                  "&:hover": { bgcolor: "rgba(255,255,255,0.1)", borderColor: "white" },
+                  px: 4,
+                  py: 1.5,
+                }}
+              >
+                View Platform
+              </Button>
+            </Box>
+          </motion.div>
         </motion.div>
-
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-6xl md:text-8xl font-bold tracking-tighter mb-6 bg-clip-text text-transparent bg-gradient-to-b from-white via-white to-white/40"
-        >
-          DECODING <br />
-          <span className="text-glow">INTELLIGENCE</span>
-        </motion.h1>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed"
-        >
-          We are building the foundational systems for general artificial intelligence.
-          Bridging the gap between biological cognition and silicon efficiency.
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-          className="mt-10 flex flex-col md:flex-row gap-4 justify-center items-center"
-        >
-          <button className="px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-colors">
-            Explore Research
-          </button>
-          <button className="px-8 py-4 border border-white/20 bg-white/5 backdrop-blur-sm rounded-full hover:bg-white/10 transition-colors">
-            View Platform
-          </button>
-        </motion.div>
-      </motion.div>
+      </Container>
 
       {/* Scroll Indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.5, duration: 1 }}
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        style={{
+          position: "absolute",
+          bottom: 40,
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 8,
+        }}
       >
-        <span className="text-[10px] uppercase tracking-widest text-gray-500">Scroll</span>
-        <div className="w-[1px] h-12 bg-gradient-to-b from-gray-500 to-transparent" />
+        <Typography variant="caption" sx={{ letterSpacing: "0.2em", color: "text.secondary" }}>
+          SCROLL
+        </Typography>
+        <Box
+          sx={{
+            width: 1,
+            height: 48,
+            background: "linear-gradient(to bottom, gray, transparent)",
+          }}
+        />
       </motion.div>
-    </section>
+    </Box>
   );
 }

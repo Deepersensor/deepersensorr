@@ -1,66 +1,134 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Button,
+  IconButton,
+  Box,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("md"));
+
+  const navItems = ["Research", "Platform", "About", "Careers"];
 
   return (
-    <motion.nav
+    <AppBar
+      position="fixed"
+      elevation={0}
+      sx={{
+        background: "rgba(3, 3, 5, 0.8)",
+        backdropFilter: "blur(10px)",
+        borderBottom: "1px solid rgba(255, 255, 255, 0.05)",
+      }}
+      component={motion.div}
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
-      className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4 md:px-12 glass-panel border-b border-white/5"
     >
-      <div className="flex items-center gap-2">
-        <div className="w-8 h-8 bg-blue-500 rounded-full blur-[2px] opacity-80 animate-pulse" />
-        <span className="text-xl font-bold tracking-tighter font-mono">
-          DEEPERSENSOR
-        </span>
-      </div>
-
-      {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-        {["Research", "Platform", "About", "Careers"].map((item) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            className="hover:text-white transition-colors duration-300"
+      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 6 } }}>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Box
+            sx={{
+              width: 32,
+              height: 32,
+              bgcolor: "primary.main",
+              borderRadius: "50%",
+              filter: "blur(2px)",
+              opacity: 0.8,
+              animation: "pulse 2s infinite",
+              "@keyframes pulse": {
+                "0%": { opacity: 0.8 },
+                "50%": { opacity: 0.4 },
+                "100%": { opacity: 0.8 },
+              },
+            }}
+          />
+          <Typography
+            variant="h6"
+            component="div"
+            sx={{
+              fontWeight: "bold",
+              letterSpacing: "-0.05em",
+              fontFamily: "monospace",
+            }}
           >
-            {item}
-          </a>
-        ))}
-      </div>
+            DEEPERSENSOR
+          </Typography>
+        </Box>
 
-      {/* Mobile Menu Button */}
-      <button
-        className="md:hidden text-white"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        {isOpen ? <X /> : <Menu />}
-      </button>
+        {!isMobile ? (
+          <Box sx={{ display: "flex", gap: 4 }}>
+            {navItems.map((item) => (
+              <Button
+                key={item}
+                href={`#${item.toLowerCase()}`}
+                sx={{
+                  color: "text.secondary",
+                  "&:hover": { color: "text.primary" },
+                }}
+              >
+                {item}
+              </Button>
+            ))}
+          </Box>
+        ) : (
+          <IconButton
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            onClick={() => setIsOpen(true)}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="absolute top-full left-0 right-0 bg-black/90 backdrop-blur-xl border-b border-white/10 p-6 flex flex-col gap-4 md:hidden"
+        <Drawer
+          anchor="top"
+          open={isOpen}
+          onClose={() => setIsOpen(false)}
+          PaperProps={{
+            sx: {
+              bgcolor: "background.default",
+              backgroundImage: "none",
+            },
+          }}
         >
-          {["Research", "Platform", "About", "Careers"].map((item) => (
-            <a
-              key={item}
-              href={`#${item.toLowerCase()}`}
-              className="text-gray-400 hover:text-white text-lg"
-              onClick={() => setIsOpen(false)}
-            >
-              {item}
-            </a>
-          ))}
-        </motion.div>
-      )}
-    </motion.nav>
+          <Box sx={{ p: 2, display: "flex", justifyContent: "flex-end" }}>
+            <IconButton onClick={() => setIsOpen(false)} color="inherit">
+              <CloseIcon />
+            </IconButton>
+          </Box>
+          <List>
+            {navItems.map((item) => (
+              <ListItem key={item} disablePadding>
+                <ListItemButton
+                  component="a"
+                  href={`#${item.toLowerCase()}`}
+                  onClick={() => setIsOpen(false)}
+                >
+                  <ListItemText primary={item} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </Toolbar>
+    </AppBar>
   );
 }

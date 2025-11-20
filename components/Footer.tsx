@@ -1,48 +1,130 @@
+import { Box, Container, Grid, Typography, Link } from "@mui/material";
+
 export default function Footer() {
   return (
-    <footer className="py-20 px-6 md:px-12 border-t border-white/10 bg-black">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
-        <div>
-          <div className="flex items-center gap-2 mb-6">
-            <div className="w-6 h-6 bg-blue-500 rounded-full blur-[1px] opacity-80" />
-            <span className="text-lg font-bold tracking-tighter font-mono">
-              DEEPERSENSOR
-            </span>
-          </div>
-          <p className="text-gray-500 text-sm max-w-xs">
-            Advancing the state of the art in artificial intelligence.
-          </p>
-        </div>
+    <Box
+      component="footer"
+      sx={{
+        py: 10,
+        borderTop: "1px solid rgba(255, 255, 255, 0.1)",
+        bgcolor: "black",
+      }}
+    >
+      <Container maxWidth="lg">
+        <Grid container spacing={8}>
+          <Grid item xs={12} md={4}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1, mb: 3 }}>
+              <Box
+                sx={{
+                  width: 24,
+                  height: 24,
+                  bgcolor: "primary.main",
+                  borderRadius: "50%",
+                  filter: "blur(1px)",
+                  opacity: 0.8,
+                }}
+              />
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                  letterSpacing: "-0.05em",
+                  fontFamily: "monospace",
+                }}
+              >
+                DEEPERSENSOR
+              </Typography>
+            </Box>
+            <Typography variant="body2" color="text.secondary" sx={{ maxWidth: 300 }}>
+              Advancing the state of the art in artificial intelligence.
+            </Typography>
+          </Grid>
 
-        <div className="flex gap-12 md:gap-24">
-          <div className="flex flex-col gap-4">
-            <h4 className="font-bold text-white">Research</h4>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">Publications</a>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">Code</a>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">Datasets</a>
-          </div>
-          <div className="flex flex-col gap-4">
-            <h4 className="font-bold text-white">Company</h4>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">About</a>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">Careers</a>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">Blog</a>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">Contact</a>
-          </div>
-          <div className="flex flex-col gap-4">
-            <h4 className="font-bold text-white">Social</h4>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">Twitter</a>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">LinkedIn</a>
-            <a href="#" className="text-gray-500 hover:text-white text-sm">GitHub</a>
-          </div>
-        </div>
-      </div>
-      <div className="max-w-7xl mx-auto mt-20 pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-gray-600">
-        <p>&copy; 2025 Deepersensor Labs. All rights reserved.</p>
-        <div className="flex gap-6">
-          <a href="#" className="hover:text-gray-400">Privacy Policy</a>
-          <a href="#" className="hover:text-gray-400">Terms of Service</a>
-        </div>
-      </div>
-    </footer>
+          <Grid item xs={12} md={8}>
+            <Grid container spacing={4}>
+              <Grid item xs={6} sm={4}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2, color: "white" }}>
+                  Research
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  {["Publications", "Code", "Datasets"].map((item) => (
+                    <Link
+                      key={item}
+                      href="#"
+                      color="text.secondary"
+                      underline="hover"
+                      sx={{ "&:hover": { color: "white" } }}
+                    >
+                      {item}
+                    </Link>
+                  ))}
+                </Box>
+              </Grid>
+              <Grid item xs={6} sm={4}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2, color: "white" }}>
+                  Company
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  {["About", "Careers", "Blog", "Contact"].map((item) => (
+                    <Link
+                      key={item}
+                      href="#"
+                      color="text.secondary"
+                      underline="hover"
+                      sx={{ "&:hover": { color: "white" } }}
+                    >
+                      {item}
+                    </Link>
+                  ))}
+                </Box>
+              </Grid>
+              <Grid item xs={6} sm={4}>
+                <Typography variant="subtitle1" sx={{ fontWeight: "bold", mb: 2, color: "white" }}>
+                  Social
+                </Typography>
+                <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  {["Twitter", "LinkedIn", "GitHub"].map((item) => (
+                    <Link
+                      key={item}
+                      href="#"
+                      color="text.secondary"
+                      underline="hover"
+                      sx={{ "&:hover": { color: "white" } }}
+                    >
+                      {item}
+                    </Link>
+                  ))}
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Box
+          sx={{
+            mt: 10,
+            pt: 4,
+            borderTop: "1px solid rgba(255, 255, 255, 0.05)",
+            display: "flex",
+            flexDirection: { xs: "column", md: "row" },
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 2,
+          }}
+        >
+          <Typography variant="caption" color="text.secondary">
+            &copy; 2025 Deepersensor Labs. All rights reserved.
+          </Typography>
+          <Box sx={{ display: "flex", gap: 3 }}>
+            <Link href="#" variant="caption" color="text.secondary" underline="hover">
+              Privacy Policy
+            </Link>
+            <Link href="#" variant="caption" color="text.secondary" underline="hover">
+              Terms of Service
+            </Link>
+          </Box>
+        </Box>
+      </Container>
+    </Box>
   );
 }
